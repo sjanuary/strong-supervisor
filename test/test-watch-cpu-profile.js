@@ -54,7 +54,6 @@ tap.test('cpu-profile', skipUnlessWatchdog || function(t) {
         ttt.equal(msg.stallout, 2);
         ttt.assert(msg.profile);
         ttt.end();
-        tt.end();
       };
       agent.metrics.startCpuProfiling(1000);
 
@@ -62,6 +61,8 @@ tap.test('cpu-profile', skipUnlessWatchdog || function(t) {
       stall(1);
       stall(2);
     });
+
+    tt.end();
 
     function send(msg, type) {
       if (hook) hook(msg, type);
@@ -100,16 +101,5 @@ tap.test('cpu-profile', skipUnlessWatchdog || function(t) {
     }
   });
 
-
-  // Need to do some work here due to the asynchronous nature of appmetrics,
-  // otherwise the tests will fail before the profiler even starts.
-  var counter = 0;
-  var i = setInterval(function() {
-    counter++;
-    if (counter === 7) {
-      t.end();
-      clearInterval(i);
-    }
-  }, 1000);
-  t.on('end', clearInterval.bind(null, i));
+  t.end();
 });
